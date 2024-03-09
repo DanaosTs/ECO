@@ -1,2 +1,2 @@
-# E-Class Organizer - ECO
+# ECO / E-Class Organizer
 Εφαρμογή εγκατάστασης αρχείων του e-class
