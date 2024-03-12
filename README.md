@@ -8,13 +8,13 @@
 
   - [Features](#features)
   - [How does it work](#how-does-it-work)
-    - [Access to eClass](#1-access-to-eclass)
-    - [Registered Courses](#2-registered-courses)
-    - [Structure of Uploaded Documents](#3-structure-of-uploaded-documents)
-    - [Reconstruction of Directories](#4-reconstruction-of-directories)
+    - [Access to eClass](#-1-access-to-eclass)
+    - [Registered Courses](#-2-registered-courses)
+    - [Structure of Uploaded Documents](#-3-structure-of-uploaded-documents)
+    - [Reconstruction of Directories](#-4-reconstruction-of-directories)
   - [I Don't Trust The Application](#i-dont-trust-the-application)
-    - [Requirements](#requirements)
-    - [Libraries Used](#libraries-used-inside-of-ecopy)
+    - [Requirements](#-requirements)
+    - [Libraries Used](#-libraries-used-inside-of-ecopy)
 
 ## Features
 
@@ -25,7 +25,7 @@
 
 ## How does it work?
 
-### <ins> 1. Access to eClass
+### <ins> 1. Access to eClass 
 
   A GET request is sent to the login page to start the session, a POST request follows with the credentials as the payload to login and the active session cookie that's created once the login is successful is stored. Comparing the cookie before the POST request and after is a way to recognize whether the login attempt was successful or not.
 
