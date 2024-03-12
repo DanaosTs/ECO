@@ -50,7 +50,7 @@
 
   1. `visit("uth.gr/courses/CS_U_102", "Python")`
   2. Files under CS_U_102 are downloaded inside of the Python folder that was created
-  3. The two subdirectories are recognised and stored inside of an array
+  3. The two subdirectories are recognized and stored inside of an array
   4. `visit("uth.gr/courses/CS_U_102/Examples", "Python/Examples")`
   5. Files under CS_U_102/Examples are downloaded inside of the Python/Examples directory
   6. Check if there are subdirectories inside of Examples
@@ -115,7 +115,7 @@
 
 ### <ins> Steps To Create The Executable
 
-  1. Navigate to the directory `ECO.py` is located in, either from the terminal inside of your prefered IDE or the command prompt\
+  1. Navigate to the directory `ECO.py` is located in, either from the terminal inside of your preferred IDE or the command prompt\
   i.e `cd Downloads\ECO`\
   Executing either `dir` or `ls` should display `ECO.py`
 
