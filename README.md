@@ -43,7 +43,7 @@
 
 ### <ins> 4. Reconstruction of Directories
 
-  For every course that was stored in the first stage, a folder is created that's named after the title of the aforementioned course, then a function is called with the title and the url as arguments. <br> First, all the documents under uth.gr/courses/*Course_ID* are downloaded inside of the corresponding folder, next it checks whether there are folders that should be visited inside of that course. If that is the case, the function is called recursively with the modified resource locator and title of the folder as arguments, until there are no more folders to visit.
+  For every course that was stored in the first stage, a folder is created that's named after the title of the aforementioned course, then a function is called with the title and the url as arguments. <br> First, all the documents under uth.gr/courses/*Course_ID* are downloaded inside of the corresponding folder, next it checks whether there are folders that should be visited inside of that course. If that is the case, the function is called recursively with the modified url and folder structure as arguments, until there are no more folders to visit.
 
   E.g. Under course `CS_U_102` there are two subdirectories, `Examples` and `Assignments`, below are the steps of the workflow:
   The steps of the workflow are:
@@ -57,6 +57,8 @@
   7. `visit("uth.gr/courses/CS_U_102/Assignments", "Python/Assignments")`
   8. Files under CS_U_102/Assignments are downloaded inside of the Python/Assignments directory
   9. Check if there are subdirectories inside of Assignments
+
+  This is how the resulting folder structure will look like: 
 
   ```
   University/
