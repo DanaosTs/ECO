@@ -15,6 +15,8 @@
   - [I Don't Trust The Application](#i-dont-trust-the-application)
     - [Requirements](#-requirements)
     - [Libraries Used](#-libraries-used-inside-of-ecopy)
+    - [Steps To Create The Executable](#-steps-to-create-the-executable)
+  - [Roadmap](#roadmap)
 
 ## Features
 
