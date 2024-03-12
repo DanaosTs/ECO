@@ -1,110 +1,136 @@
 # E-Class Organizer
 
-Keep your lectures organized and up-to-date with the help of ECO, without spending time going through each course, with the click of a button.
+  Keep your lectures organized and up-to-date with the help of ECO, without spending time   going through each course, with a click of a button.
 
-![](Demo/sample.gif)
+  ![](Demo/sample.gif)
 
-_Add GIF of the download process here, with the file explorer on the side displaying the folders being added_
+## Table of Contents
+
+  - [Features](#features)
+  - [How does it work](#how-does-it-work)
+    - [Access to eClass](#1-access-to-eclass)
+    - [Registered Courses](#2-registered-courses)
+    - [Structure of Uploaded Documents](#3-structure-of-uploaded-documents)
+    - [Reconstruction of Directories](#4-reconstruction-of-directories)
+  - [I Don't Trust The Application](#i-dont-trust-the-application)
+    - [Requirements](#requirements)
+    - [Libraries Used](#libraries-used-inside-of-ecopy)
 
 ## Features
 
-- In-app file explorer
-- Already installed files are skipped
-- Login information is saved for future use
-- Locally encrypted login information
+  - In-app file explorer
+  - Previously installed files are skipped
+  - Login information is saved for future use
+  - Locally encrypted login information
 
 ## How does it work?
 
-The libraries the application relies on the most are requests and BeautifulSoup, through those two ECO was made possible. <s>Further down I will be going more into depth on how it operates,
-</s>
+### <ins> 1. Access to eClass
 
+  A GET request is sent to the login page to start the session, a POST request follows with the credentials as the payload to login and the active session cookie that's created once the login is successful is stored. Comparing the cookie before the POST request and after is a way to recognize whether the login attempt was successful or not.
 
-## Getting started
+### <ins> 2. Registered Courses
 
-To make it easy for you to get started with GitLab, here's a list of recommended next steps.
+  The part of eClass that gets processed first is the one that contains all of the courses the student is registered in. Similarly, the data is obtained with a GET requests to that subpage, parsed with BeautifulSoup and filtered with regular expressions to obtain the information for every registered course.<br> With that we can now store the title and ID of each course, those will be used for the creation of the folders the files from eClass will be stored in, while the ID will be used to visit each course under the e-class platform.
 
-Already a pro? Just edit this README.md and make it your own. Want to make it easy? [Use the template at the bottom](#editing-this-readme)!
+  E.g. with `CS_U_102` as the course ID  `eclass.uth.gr/courses/CS_U_102/` will be visited
 
-## Add your files
+### <ins> 3. Structure of Uploaded Documents
 
-- [ ] [Create](https://docs.gitlab.com/ee/user/project/repository/web_editor.html#create-a-file) or [upload](https://docs.gitlab.com/ee/user/project/repository/web_editor.html#upload-a-file) files
-- [ ] [Add files using the command line](https://docs.gitlab.com/ee/gitlab-basics/add-file.html#add-a-file-using-the-command-line) or push an existing Git repository with the following command:
+  For every visit, the content of the page is processed and filtered with BeautifulSoup and regular expressions just like before, now the elements that will be stored from it are essentially directories and hypertext references. Directories because eClass allows professors to create folders under their courses, which in turn results in a structure similar to how files are stored in operating systems.
 
-```
-cd existing_repo
-git remote add origin https://gitlab.com/DanTsio/university-kivy-app.git
-git branch -M main
-git push -uf origin main
-```
+  E.g. with a folder named "Examples" under a course with an ID of `CS_U_102` which can be seen as the "root" directory, the structure looks like: `eclass.uth.gr/courses/CS_U_102/Examples/`
 
-## Integrate with your tools
+### <ins> 4. Reconstruction of Directories
 
-- [ ] [Set up project integrations](https://gitlab.com/DanTsio/university-kivy-app/-/settings/integrations)
+  For every course that was stored in the first stage, a folder is created that's named after the title of the aforementioned course, then a function is called with the title and the url as arguments. <br> First, all the documents under uth.gr/courses/*Course_ID* are downloaded inside of the corresponding folder, next it checks whether there are folders that should be visited inside of that course. If that is the case, the function is called recursively with the modified resource locator and title of the folder as arguments, until there are no more folders to visit.
 
-## Collaborate with your team
+  E.g. Under course `CS_U_102` there are two subdirectories, `Examples` and `Assignments`, below are the steps of the workflow:
+  The steps of the workflow are:
 
-- [ ] [Invite team members and collaborators](https://docs.gitlab.com/ee/user/project/members/)
-- [ ] [Create a new merge request](https://docs.gitlab.com/ee/user/project/merge_requests/creating_merge_requests.html)
-- [ ] [Automatically close issues from merge requests](https://docs.gitlab.com/ee/user/project/issues/managing_issues.html#closing-issues-automatically)
-- [ ] [Enable merge request approvals](https://docs.gitlab.com/ee/user/project/merge_requests/approvals/)
-- [ ] [Set auto-merge](https://docs.gitlab.com/ee/user/project/merge_requests/merge_when_pipeline_succeeds.html)
+  1. `visit("uth.gr/courses/CS_U_102", "Python")`
+  2. Files under CS_U_102 are downloaded inside of the Python folder that was created
+  3. The two subdirectories are recognised and stored inside of an array
+  4. `visit("uth.gr/courses/CS_U_102/Examples", "Python/Examples")`
+  5. Files under CS_U_102/Examples are downloaded inside of the Python/Examples directory
+  6. Check if there are subdirectories inside of Examples
+  7. `visit("uth.gr/courses/CS_U_102/Assignments", "Python/Assignments")`
+  8. Files under CS_U_102/Assignments are downloaded inside of the Python/Assignments directory
+  9. Check if there are subdirectories inside of Assignments
 
-## Test and Deploy
+  ```
+  University/
+  └── 8ο Εξάμηνο/
+      └── Python/
+          ├── Lecture1.pdf
+          ├── Lecture2.pdf
+          ├── ...
+          ├── Examples/
+          │   ├── Example1.py
+          │   ├── Example2.py
+          │   └── ...
+          └── Assignments/
+              ├── Assignment1.doc
+              ├── Assignment2.doc
+              └── ...
+  ```
 
-Use the built-in continuous integration in GitLab.
+## "I Don't Trust The Application"
 
-- [ ] [Get started with GitLab CI/CD](https://docs.gitlab.com/ee/ci/quick_start/index.html)
-- [ ] [Analyze your code for known vulnerabilities with Static Application Security Testing (SAST)](https://docs.gitlab.com/ee/user/application_security/sast/)
-- [ ] [Deploy to Kubernetes, Amazon EC2, or Amazon ECS using Auto Deploy](https://docs.gitlab.com/ee/topics/autodevops/requirements.html)
-- [ ] [Use pull-based deployments for improved Kubernetes management](https://docs.gitlab.com/ee/user/clusters/agent/)
-- [ ] [Set up protected environments](https://docs.gitlab.com/ee/ci/environments/protected_environments.html)
+  I understand there are privacy and security concerns when using your academic credentials in a random application, which is why I wrote this segment in the first place. Inside of the source code it's apparent the login credentials are stored **locally** and are **encrypted**. <br>Since it's not possible to verify that the executable has been created based on the source code, below I provide the instructions for the creation of the executable from scratch.
 
-***
+### <ins> Requirements
 
-# Editing this README
+  The package that was used for the application is pyinstaller, it "bundles a Python application and all its dependencies into a single package. The user can run the packaged app without installing a Python interpreter or any modules." [from the manual of pyinstaller](https://pyinstaller.org/en/stable/) <br>In short, all that is needed to create the executable is: pyinstaller and all the packages that are used inside of ECO.py
 
-When you're ready to make this README your own, just edit this file and use the handy template below (or feel free to structure it however you want - this is just a starting point!). Thanks to [makeareadme.com](https://www.makeareadme.com/) for this template.
+#### <ins> Libraries Used:
 
-## Suggestions for a good README
+  `beautifulsoup4`\
+  `bs4`\
+  `certifi`\
+  `cffi`\
+  `charset-normalizer`\
+  `cryptography`\
+  `docutils`\
+  `idna`\
+  `Kivy`\
+  `Kivy-Garden`\
+  `pycparser`\
+  `Pygments`\
+  `requests`\
+  `soupsieve`\
+  `urllib3`
 
-Every project is different, so consider which of these sections apply to yours. The sections used in the template are suggestions for most open source projects. Also keep in mind that while a README can be too long and detailed, too long is better than too short. If you think your README is too long, consider utilizing another form of documentation rather than cutting out information.
+  To download the packages for the libraries execute
+  ```
+  pip install beautifulsoup4 bs4 certifi etc...
+  ```
+  Or alternatively
+  ```
+  pip install -r requirements.txt
+  ```
+  Can be used to download all of them at once
 
-## Name
-Choose a self-explaining name for your project.
+### <ins> Steps To Create The Executable
 
-## Description
-Let people know what your project can do specifically. Provide context and add a link to any reference visitors might be unfamiliar with. A list of Features or a Background subsection can also be added here. If there are alternatives to your project, this is a good place to list differentiating factors.
+  1. Navigate to the directory `ECO.py` is located in, either from the terminal inside of your prefered IDE or the command prompt\
+  i.e `cd Downloads\ECO`\
+  Executing either `dir` or `ls` should display `ECO.py`
 
-## Badges
-On some READMEs, you may see small images that convey metadata, such as whether or not all the tests are passing for the project. You can use Shields to add some to your README. Many services also have instructions for adding a badge.
+  2. To ensure there are no issues, run `ECO.py` after installing the packages
 
-## Visuals
-Depending on what you are making, it can be a good idea to include screenshots or even a video (you'll frequently see GIFs rather than actual videos). Tools like ttygif can help, but check out Asciinema for a more sophisticated method.
+  3. Execute 
+    ```
+    pyinstaller --onefile --windowed --icon=ECOIcon.ico ECO.py
+    ```
+    `--onefile` creates a one-file bundled executable\
+    `--windowed` restricts the console window from opening when running the application\
+    `--icon` Applies the provided icon to the executable (Note: The icon has to be placed inside of the folder the executable is in, for it to be displayed when running the executable)
 
-## Installation
-Within a particular ecosystem, there may be a common way of installing things, such as using Yarn, NuGet, or Homebrew. However, consider the possibility that whoever is reading your README is a novice and would like more guidance. Listing specific steps helps remove ambiguity and gets people to using your project as quickly as possible. If it only runs in a specific context like a particular programming language version or operating system or has dependencies that have to be installed manually, also add a Requirements subsection.
-
-## Usage
-Use examples liberally, and show the expected output if you can. It's helpful to have inline the smallest example of usage that you can demonstrate, while providing links to more sophisticated examples if they are too long to reasonably include in the README.
-
-## Support
-Tell people where they can go to for help. It can be any combination of an issue tracker, a chat room, an email address, etc.
+  4. The executable is stored inside of the "dist" folder that has been created
 
 ## Roadmap
-If you have ideas for releases in the future, it is a good idea to list them in the README.
 
-## Contributing
-State if you are open to contributions and what your requirements are for accepting them.
-
-For people who want to make changes to your project, it's helpful to have some documentation on how to get started. Perhaps there is a script that they should run or some environment variables that they need to set. Make these steps explicit. These instructions could also be useful to your future self.
-
-You can also document commands to lint the code or run tests. These steps help to ensure high code quality and reduce the likelihood that the changes inadvertently break something. Having instructions for running tests is especially helpful if it requires external setup, such as starting a Selenium server for testing in a browser.
-
-## Authors and acknowledgment
-Show your appreciation to those who have contributed to the project.
-
-## License
-For open source projects, say how it is licensed.
-
-## Project status
-If you have run out of energy or time for your project, put a note at the top of the README saying that development has slowed down or stopped completely. Someone may choose to fork your project or volunteer to step in as a maintainer or owner, allowing your project to keep going. You can also make an explicit request for maintainers.
+  - Add option to set download location of the University folder
+  - Add the ability to choose which courses should be downloaded
+  - Add comments inside of the source code
