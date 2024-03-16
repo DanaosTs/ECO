@@ -1,4 +1,4 @@
-# E-Class Organizer
+# eClass Organizer
 
   Keep your lectures organized and up-to-date with the help of ECO, without spending time   going through each course, with a click of a button.
 
@@ -6,6 +6,7 @@
 
 ## Table of Contents
 
+  - [Usage](#usage)
   - [Features](#features)
   - [How does it work](#how-does-it-work)
     - [Access to eClass](#-1-access-to-eclass)
@@ -17,6 +18,12 @@
     - [Libraries Used](#-libraries-used-inside-of-ecopy)
     - [Steps To Create The Executable](#-steps-to-create-the-executable)
   - [Roadmap](#roadmap)
+
+## Usage 
+
+  - Navigate to the `Login Information` tab that's located at the top
+  - Input the username, password and semester in their corresponding fields and select `Save Login Information`
+  - Return to the `Download` tab to initiate the download process
 
 ## Features
 
@@ -33,7 +40,7 @@
 
 ### <ins> 2. Registered Courses
 
-  The part of eClass that gets processed first is the one that contains all of the courses the student is registered in. Similarly, the data is obtained with a GET requests to that subpage, parsed with BeautifulSoup and filtered with regular expressions to obtain the information for every registered course.<br> With that we can now store the title and ID of each course, those will be used for the creation of the folders the files from eClass will be stored in, while the ID will be used to visit each course under the e-class platform.
+  The part of eClass that gets processed first is the one that contains all of the courses the student is registered in. Similarly, the data is obtained with a GET requests to that subpage, parsed with BeautifulSoup and filtered with regular expressions to obtain the information for every registered course.<br> With that we can now store the title and ID of each course, those will be used for the creation of the folders the files from eClass will be stored in, while the ID will be used to visit each course under the eClass platform.
 
   E.g. with `CS_U_102` as the course ID  `eclass.uth.gr/courses/CS_U_102/` will be visited
 
@@ -47,8 +54,8 @@
 
   For every course that was stored in the first stage, a folder is created that's named after the title of the aforementioned course, then a function is called with the title and the url as arguments. <br> First, all the documents under uth.gr/courses/*Course_ID* are downloaded inside of the corresponding folder, next it checks whether there are folders that should be visited inside of that course. If that is the case, the function is called recursively with the modified url and folder structure as arguments, until there are no more folders to visit.
 
-  E.g. Under course `CS_U_102` there are two subdirectories, `Examples` and `Assignments`, below are the steps of the workflow:
-  The steps of the workflow are:
+  E.g. Under course `CS_U_102` there are two subdirectories, `Examples` and `Assignments`\
+  The process of downloading the files looks like:
 
   1. `visit("uth.gr/courses/CS_U_102", "Python")`
   2. Files under CS_U_102 are downloaded inside of the Python folder that was created
@@ -109,11 +116,10 @@
   ```
   pip install beautifulsoup4 bs4 certifi etc...
   ```
-  Or alternatively
+  Or alternatively to download all of them at once 
   ```
   pip install -r requirements.txt
   ```
-  Can be used to download all of them at once
 
 ### <ins> Steps To Create The Executable
 
@@ -124,12 +130,12 @@
   2. To ensure there are no issues, run `ECO.py` after installing the packages
 
   3. Execute 
-    ```
-    pyinstaller --onefile --windowed --icon=ECOIcon.ico ECO.py
-    ```
-    `--onefile` creates a one-file bundled executable\
-    `--windowed` restricts the console window from opening when running the application\
-    `--icon` Applies the provided icon to the executable (Note: The icon has to be placed inside of the folder the executable is in, for it to be displayed when running the executable)
+      ```
+      pyinstaller --onefile --windowed --icon=ECOIcon.ico ECO.py
+      ```
+      `--onefile` creates a one-file bundled executable\
+      `--windowed` restricts the console window from opening when running the   application\
+      `--icon` Applies the provided icon to the executable (Note: The icon has to be  placed inside of the folder the executable is in, for it to be displayed when  running the executable)
 
   4. The executable is stored inside of the "dist" folder that has been created
 
